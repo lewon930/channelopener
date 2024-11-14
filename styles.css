@@ -1,0 +1,80 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 20px;
+}
+
+/* Main content area for buttons and results */
+#main-content {
+  display: flex;
+  flex-direction: column; /* Stack on smaller screens */
+  align-items: center;
+  gap: 20px;
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Button container grid layout */
+#button-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  gap: 10px;
+  max-width: 180px; /* Control button container width */
+  width: 100%;
+}
+
+/* Button styling */
+.item-button {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%; /* Make buttons full-width within the grid */
+  box-sizing: border-box;
+}
+
+/* Control buttons styling */
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+#submit-button, #reset-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Result area styling */
+#result-area {
+  padding: 10px;
+  border: 1px solid #ccc;
+  max-width: 250px;
+  width: 100%;
+  text-align: left;
+  margin-top: 20px; /* Add top margin for small screens */
+}
+
+/* Responsive layout: Side-by-side on larger screens */
+@media (min-width: 768px) {
+  /* Arrange button container and result area side-by-side */
+  #main-content {
+      flex-direction: row; /* Horizontal layout for buttons and result */
+      align-items: flex-start;
+      justify-content: center;
+      max-width: 600px;
+      gap: 20px;
+  }
+
+  #button-container {
+      margin: 0;
+  }
+
+  #result-area {
+      margin-top: 0; /* Remove top margin for inline layout */
+      max-width: 250px; /* Set a fixed width for the result area */
+  }
+}
