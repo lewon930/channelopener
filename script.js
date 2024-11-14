@@ -61,9 +61,9 @@ document.getElementById('submit-button').addEventListener('click', () => {
 });
 
 // Close popup
-document.getElementById('close-popup').addEventListener('click', () => {
-  document.getElementById('popup').style.display = 'none';
-});
+////document.getElementById('close-popup').addEventListener('click', () => {
+//  document.getElementById('popup').style.display = 'none';
+//});
 
 // Handle reset button click
 document.getElementById('reset-button').addEventListener('click', () => {

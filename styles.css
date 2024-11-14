@@ -20,7 +20,7 @@ body {
 /* Button container grid layout */
 #button-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  grid-template-columns: repeat(4, 1fr); /* 2 columns */
   gap: 10px;
   max-width: 180px; /* Control button container width */
   width: 100%;
