@@ -6,7 +6,7 @@ document.querySelectorAll('.item-button').forEach(button => {
   button.clickCount = 0;
 
   button.addEventListener('click', () => {
-    button.clickCount = (button.clickCount + 1) % 3;
+    button.clickCount = (button.clickCount + 1) % 2;
 
     if (button.clickCount === 1) {
       button.style.backgroundColor = 'blue';
