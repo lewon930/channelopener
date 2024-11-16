@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>id</title>
   <link rel="stylesheet" href="styles.css">
+
+  <script type="module">
+  if ('serviceWorker' in navigator) { // 서비스 워커 지원 확인
+    window.addEventListener('load', function () { // 브라우저 로드가 완료되면
+        navigator.serviceWorker.register('./sw.js'); // 서비스 워커 등록
+    });
+}
+    </script>
 </head>
 <body>
   <div class="container">
@@ -802,6 +810,6 @@
     
   </div>
 
-  <script src="script.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
