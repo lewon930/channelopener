@@ -60,14 +60,14 @@ const relatedItemsMap = {
   "R-HT3(Magic 8ers)": ["R-GB44","R-BL65","L-HT9","L-LU9","L-GB34"],
   "L-HT3(Magic 8ers)": ["L-GB44","L-BL65","R-HT9","R-LU9","R-GB34"],
 
-  "R-SI1(Magic 8ers)": ["R-SI3","R-LIV8","L-LIV1","L-KD3","L-SI8"],
-  "L-SI1(Magic 8ers)": ["L-SI3","L-LIV8","R-LIV1","R-KD3","R-SI8"],
+  "R-SI1(Magic 8ers)": ["R-LI3","R-LIV8","L-LIV1","L-KD3","L-SI8"],
+  "L-SI1(Magic 8ers)": ["L-LI3","L-LIV8","R-LIV1","R-KD3","R-SI8"],
 
   "R-GB44(Magic 8ers)": ["R-GB44","R-BL65","R-HT3","L-HT9","L-LU9","L-GB34"],
   "L-GB44(Magic 8ers)": ["L-GB44","L-BL65","L-HT3","R-HT9","R-LU9","R-GB34"],
 
-  "R-LIV8(Magic 8ers)": ["R-SI1","R-SI3","L-LIV1","L-KD3","L-SI8"],
-  "L-LIV8(Magic 8ers)": ["L-SI1","L-SI3","R-LIV1","R-KD3","R-SI8"],
+  "R-LIV8(Magic 8ers)": ["R-SI1","R-LI3","L-LIV1","L-KD3","L-SI8"],
+  "L-LIV8(Magic 8ers)": ["L-SI1","L-LI3","R-LIV1","R-KD3","R-SI8"],
 
 
 
