@@ -1,24 +1,36 @@
-// Track selected items
-let selectedItems = new Set();
+const buttons = document.querySelectorAll('.item-button');
+const itemList = document.getElementById('item-list');
 
-// Initialize button click event
-document.querySelectorAll('.item-button').forEach(button => {
-  button.clickCount = 0;
+//Track buttons states and selected data
+const buttonStates = new Map(); //Tracks states:'default','blue','red'
 
-  button.addEventListener('click', () => {
-    button.clickCount = (button.clickCount + 1) % 2;
-
-    if (button.clickCount === 1) {
-      button.style.backgroundColor = 'blue';
-    } else if (button.clickCount === 2) {
-      button.style.backgroundColor = 'red';
-    }
-     else {
-      button.style.backgroundColor = '';
-    }
-  });
+//Initialize button states
+buttons.forEach(button=>{
+  buttonStates.set(button,'default');
+  button.addEventListener('click',()=> handleButtonClick(button))
+  
 });
 
+//Handle button click
+function handleButtonClick(button){
+   const currentState = buttonStates.get(button);
+
+   //Cycle through states: default -> blue -> read ->default
+   if(currentState ==='default'){
+    buttonStates.set(button,'blue');
+    button.classList.add('blue');
+    button.classList.remove('red');
+   } else if (currentState === 'blue'){
+    buttonStates.set(button,'red');
+    button.classList.add('red');
+    button.classList.remove('blue');
+   } else {
+      buttonStates.set(button,'default');
+      button.classList.remove('red','blue');
+   }
+   updateResults();
+  
+}
 // Related items mapping
 const relatedItemsMap = {
   "R-LU5(Magic 8ers)": ["R-ST43","R-BL67",
@@ -74,79 +86,115 @@ const relatedItemsMap = {
 
 };
 
+//Update the results area
+function updateResults(){
+  const blueButtons = [];
+  const redButtons=[];
 
-// Handle submit button click
-document.getElementById('submit-button').addEventListener('click', () => {
-  const selectedButtons = []; // Track selected buttons
-  const selectedItems = [];
-
-  // Collect items from selected buttons
-  document.querySelectorAll('.item-button').forEach(button => {
-    if (button.clickCount > 0) {
-      selectedButtons.push(button); // Track selected button
-      const items = button.getAttribute('data-items').split(',').map(item => item.trim());
-      selectedItems.push(new Set(items)); // Store items as sets to detect duplicates later
-    }
+  //categorize buttons by color
+  buttons.forEach(button => {
+    const state = buttonStates.get(button);
+    if(state === 'blue') blueButtons.push(button);
+    if(state === 'red') redButtons.push(button);
   });
 
-  let itemsToDisplay;
+  //get common items for all selecte buttons
+  const allSelectedButtons = [...blueButtons,...redButtons];
+  const commonItemsInAll = getCommonItems(allSelectedButtons);
 
-  if (selectedButtons.length === 1) {
-    // If only one button is selected, show all items from that button
-    itemsToDisplay = Array.from(selectedItems[0]);
-  } else if (selectedButtons.length > 1) {
-    // If more than one button is selected, show only items common to all selected buttons
-    itemsToDisplay = Array.from(selectedItems.reduce((acc, itemsSet) => {
-      // Use a new Set to hold only items that are in both acc and itemsSet
-      return new Set([...acc].filter(item => itemsSet.has(item)));
-    }));
-  }
+  //get common items for red buttons only
+  const commonItemsInRed = getCommonItems(redButtons).filter(item => !commonItemsInAll.includes(item));
+ 
 
+  //Display results
+  itemList.innerHTML = '';
 
-  // Add related items to the result
-  const additionalItems = [];
-  itemsToDisplay.forEach(item => {
-    if (relatedItemsMap[item]) {
-      additionalItems.push(...relatedItemsMap[item]);
-    }
-  });
+ //Add common items in all selected buttons
+ if(commonItemsInAll.length>0){
+  const header = document.createElement('li');
+  header.textContent = 'Common in all selected buttons:';
+  header.style.fontWeight = 'bold';
+  itemList.appendChild(header);
 
-  // Combine original items with related items
-  const finalItemsToDisplay = [...new Set([...itemsToDisplay, ...additionalItems])];
-
-  
-  // Display items in the popup
-  const itemList = document.getElementById('item-list');
-  itemList.innerHTML = ''; // Clear previous items
-
-  finalItemsToDisplay.forEach(item => {
+  commonItemsInAll.forEach(item =>{
     const li = document.createElement('li');
     li.textContent = item;
-     // Check if the item is an additional item and apply the class
-    if (additionalItems.includes(item)) {
-      li.classList.add('additional-item');
-    }
     itemList.appendChild(li);
   });
+ }
+  //Add common items in red buttons only
+  if (commonItemsInRed.length>0){
+    const header = document.createElement('li');
+    header.textContent = 'common in red buttons:';
+    header.style.fontWeight = 'bold';
+    itemList.appendChild(header);
 
-  // Show the popup
-  document.getElementById('popup').style.display = 'block';
-});
+    commonItemsInRed.forEach(item =>{
+      const li = document.createElement('li');
+      li.textContent = item;
+      li.classList.add('red-item');//Apply red text
+      itemList.appendChild(li);
+    });
+    
+    const appendedItems = [] ;
+    const itemsToCheck = [...(commonItemsInAll || []), ...(commonItemsInRed || [])];
+    
+    if(Array.isArray(itemsToCheck)){
+     
+      itemsToCheck.forEach(item =>{
+        if (relatedItemsMap[item]){
+          
+          appendedItems.push(...relatedItemsMap[item]);
+        }
+      })
+    }
 
-// Close popup
-////document.getElementById('close-popup').addEventListener('click', () => {
-//  document.getElementById('popup').style.display = 'none';
-//});
+    if (appendedItems.length>0){
+      const header = document.createElement('li');
+      header.textContent = 'Related items';
+      header.style.fontWeight = 'bold';
+      itemList.appendChild(header);
+
+      appendedItems.forEach(item=>{
+        const li = document.createElement('li');
+      li.textContent = item;
+      li.classList.add('blue-item');
+      itemList.appendChild(li);
+      });     
+
+    };
+  }
+
+  
+}
+
+
+
+
+
+function getCommonItems(buttons){
+  if(buttons.length === 0) return [];
+
+  const itemSets = buttons.map(button =>
+    new Set(button.getAttribute('data-items').split(',').map(item=> item.trim()))
+  );
+
+  //find common items
+  return Array.from(itemSets.reduce((commonSet,currentSet)=>{
+    return new Set([...commonSet].filter(item => currentSet.has(item)));
+  }));
+  console.log(itemSets)
+}
+
 
 // Handle reset button click
 document.getElementById('reset-button').addEventListener('click', () => {
   // Reset button colors and click count
-  document.querySelectorAll('.item-button').forEach(button => {
-    button.style.backgroundColor = '';
-    button.clickCount = 0;
+  buttons.forEach(button => {
+    buttonStates.set(button,'default');
+    button.classList.remove('red','blue')
   });
 
-  // Clear popup content if open
-  document.getElementById('item-list').innerHTML = '';
-  document.getElementById('popup').style.display = 'none';
+  
+  
 });
